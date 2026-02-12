@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Lost & Found System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-box-seam text-primary"></i></h5>
+                <h3>{{ total_items }}</h3>
+                <p class="text-muted mb-0">Total Items</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-exclamation-triangle text-danger"></i></h5>
+                <h3>{{ lost_count }}</h3>
+                <p class="text-muted mb-0">Lost Items</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-check-circle text-success"></i></h5>
+                <h3>{{ found_count }}</h3>
+                <p class="text-muted mb-0">Found Items</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-heart-fill text-warning"></i></h5>
+                <h3>{{ verified_matches }}</h3>
+                <p class="text-muted mb-0">Recovered</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4 class="mb-0"><i class="bi bi-map"></i> Interactive Map</h4>
+    </div>
+    <div class="card-body">
+        <div class="map-container">
+            {{ map_html|safe }}
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Lost Items</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('main.report_lost') }}" class="btn btn-danger mb-3">
+                    <i class="bi bi-plus-circle"></i> Report Lost Item
+                </a>
+                <p class="text-muted">Report an item you've lost and we'll help you find it.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-check-circle"></i> Found Items</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('main.report_found') }}" class="btn btn-success mb-3">
+                    <i class="bi bi-plus-circle"></i> Report Found Item
+                </a>
+                <p class="text-muted">Found something? Report it here to help reunite it with its owner.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

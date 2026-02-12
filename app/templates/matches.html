@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Matches - Lost & Found System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-heart-fill text-warning"></i> Suggested Matches</h2>
+    <div>
+        <button class="btn btn-outline-primary" onclick="filterMatches('all')">All</button>
+        <button class="btn btn-outline-success" onclick="filterMatches('verified')">Verified</button>
+        <button class="btn btn-outline-warning" onclick="filterMatches('unverified')">Unverified</button>
+    </div>
+</div>
+
+{% if matches %}
+    <div class="row" id="matches-container">
+        {% for match in matches %}
+            <div class="col-md-6 mb-4 match-card" data-verified="{{ 'true' if match.is_verified else 'false' }}">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Match #{{ match.id }}</h5>
+                        <span class="badge bg-{{ 'success' if match.is_verified else 'warning' }}">
+                            {{ (match.confidence_score * 100)|int }}% Confidence
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="text-danger">
+                                            <i class="bi bi-exclamation-triangle"></i> Lost Item
+                                        </h6>
+                                        <h5>
+                                            <a href="{{ url_for('main.item_detail', id=match.lost_item.id) }}">
+                                                {{ match.lost_item.title }}
+                                            </a>
+                                        </h5>
+                                        {% if match.lost_item.category %}
+                                            <p class="text-muted mb-1">
+                                                <small>Category: {{ match.lost_item.category }}</small>
+                                            </p>
+                                        {% endif %}
+                                        <p class="text-muted mb-0">
+                                            <small>Reported: {{ match.lost_item.reported_at.strftime('%Y-%m-%d') }}</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="text-success">
+                                            <i class="bi bi-check-circle"></i> Found Item
+                                        </h6>
+                                        <h5>
+                                            <a href="{{ url_for('main.item_detail', id=match.found_item.id) }}">
+                                                {{ match.found_item.title }}
+                                            </a>
+                                        </h5>
+                                        {% if match.found_item.category %}
+                                            <p class="text-muted mb-1">
+                                                <small>Category: {{ match.found_item.category }}</small>
+                                            </p>
+                                        {% endif %}
+                                        <p class="text-muted mb-0">
+                                            <small>Reported: {{ match.found_item.reported_at.strftime('%Y-%m-%d') }}</small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if match.is_verified %}
+                            <div class="alert alert-success mt-3 mb-0">
+                                <i class="bi bi-shield-check"></i> This match has been verified by an admin.
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">
+                            Match created: {{ match.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> No matches found yet. Check back later!
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function filterMatches(filter) {
+        const cards = document.querySelectorAll('.match-card');
+        cards.forEach(card => {
+            const isVerified = card.dataset.verified === 'true';
+            if (filter === 'all') {
+                card.style.display = 'block';
+            } else if (filter === 'verified' && isVerified) {
+                card.style.display = 'block';
+            } else if (filter === 'unverified' && !isVerified) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}
